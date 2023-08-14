@@ -1,0 +1,4 @@
+- source: presentacion_raw.qmd
+  quarto-pub:
+    - id: 413ecbbe-003c-49e0-8353-f5504ead79da
+      url: 'https://quartopub.com/sites/alexvbr/proyeccion_series_2023'

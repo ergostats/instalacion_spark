@@ -1,0 +1,250 @@
+---
+title: "Proyección de las ventas 2023"
+author: "Centro de Investigación Estadística ERGOSTATS"
+date: "Diciembre 15, 2022"
+format: 
+  revealjs:
+    css: scss/theme_ergostats.css
+    slide-number: true
+    logo: scss/logo.png
+editor: visual
+title-slide-attributes: 
+  data-background-image: scss/grafismo.png
+  data-background-size: 100%
+---
+
+## Bienvenidos 🖖
+
+⏲️ El taller va a tener una duración de 45 minutos
+
+🪐 Repositorio con el material de este taller:
+
+<https://github.com/ergostats/series_tiempo_ccq>
+
+> Tambien tienes una copia del repositorio en la carpeta compartida de OneDrive
+
+Ya que estás por ahí puedes dejarnos tu ⭐
+
+Si necesitas ayuda levanta tu mano (interacciones de Zoom) 🖐️
+
+## Algunas reglas generales
+
+-   ❔ No dudes en preguntar, la forma más chevere de aprender es en conjunto
+
+-   👨‍💻 Si no tienes computador no te preocupes, el taller quedará gravado y lo podrás seguir en casa.
+
+-   📹 Para acceder al material audiovisual. Envianos un correo a:
+
+    -   Alex Bajaña instructor del taller ([alexvbr\@ergostats.org](https://ergostats.github.io/series_tiempo_ccq/alexvbr@ergostats.org) )
+
+    -   Fernando Arevalo organizador ([fdarevalo\@lacamaradequito.com](https://ergostats.github.io/series_tiempo_ccq/fdarevalo@lacamaradequito.com))
+
+## Alex Bajaña
+
+::: columns
+::: {.column width="50%"}
+![](img/alex_photo.jpg)
+:::
+
+::: {.column width="50%"}
+-   Tengo 30 años
+
+-   7 de experiencia
+
+-   Actualmente soy investigador para el Banco Mundial y fundador del Centro de Inestigación Estadística ERGOSTATS
+
+-   Twitter: \@AlexBajaa5
+
+-   Correo: alexvbr\@ergostats.org
+:::
+:::
+
+## Agenda
+
+|               |                                                                      |
+|------------------|------------------------------------------------------|
+| 18:00 - 18:10 | Introducción y presentación del taller, los datos y las herramientas |
+| 18:11 - 18:20 | Análisis exploratorio y formatos de fecha                            |
+| 18:21 - 18:30 | Análisis gráfico con {tsibble}                                       |
+| 18:31 - 18:45 | Pornósticos con {fabble}                                             |
+
+: Las preguntas se responderan a lo largo del taller
+
+## Recursos 📖
+
+::: columns
+::: {.column width="50%"}
+### Libros
+
+-   [R para ciencia de datos, Hadley Wickham (versión en español)](https://es.r4ds.hadley.nz/)
+
+-   [Forcasting: Principles and practice 3rd Edition, Rob Hyndman y George Athanasopoulus](https://otexts.com/fpp3/)
+
+-   [Tidy time series forecasting with fable, by tidyverts](https://tidyverts.github.io/tidy-forecasting-principles/index.html)
+:::
+
+::: {.column width="50%"}
+### Librerias de R:
+
+-   [tsibble](https://tsibble.tidyverts.org/)
+
+-   [fable](https://fable.tidyverts.org/)
+
+-   [lubridate](https://lubridate.tidyverse.org/)
+
+-   [tidyverse](https://www.tidyverse.org/)
+
+-   [feasts](https://cran.r-project.org/web/packages/feasts/index.html)
+:::
+:::
+
+## El flujo de trabajo `tidy`
+
+![](images/paste-A51C3D77.png)
+
+## `tidy` series de tiempo
+
+![](images/paste-DE5C879A.png)
+
+## Ambiente de trabajo 🖥️
+
+Esta presentación se realizó con la versión de R:
+
+```{r}
+
+R.version
+```
+
+> Para este taller necesitamos cualquier versión desde la R 4.2.0
+
+## Ambiente de trabajo
+
+Librerías:
+
+```{r echo=TRUE}
+
+# Para manejar las tablas
+
+library(tidyverse)
+
+# Para manejar las fechas: 
+library(lubridate)
+
+# Herramientas para manejar series de tiempo:
+library(tsibble)
+
+# Herramientas para pronóstico:
+library(fable)
+
+# Herramientas para extraer carácteristicas de las series de tiempo:
+library(feasts)
+
+```
+
+# Nuestros datos: 🗄️
+
+Para el desarrollo de nuestro taller hemos hecho uso de la herramienta [SAIKU-SRI](https://srienlinea.sri.gob.ec/saiku-ui/) con las siguientes consideraciones:
+
+-   Cubo de declaraciónes 104
+
+-   Variables categóricas:
+
+    -   Año y mes fiscal
+
+    -   Tipo de contribuyente (Determina si son ventas privadas o de otros contribuyentes)
+
+    -   Calsificación de actividad económica CIIU a 6 dígitos
+
+## Nuestros datos: (cont.) 🗄️
+
+-   Variables númericas
+
+    -   Rubros de ventas locales y de activos fijos gravadas con el 12% de IVA
+
+    -   Rubros de ventas locales y de activos fijos con derecho y sin derecho a crédito tributario gravadas con 0% de IVA
+
+-   Filtramos los datos para el sector de comercio (Familia de actividades G)
+
+-   Periodo de análisis: 2011-2022
+
+-   Descarga en formato `.csv`
+
+## Pre-procesamiento: ⚠️
+
+Descargados estos datos realizamos algunas transformaciones y se generó un diccionario. Los datos y diccionario los encontrarás en la carpeta `data/`.
+
+Transformaciones:
+
+-   Agrupación de las ventas gravadas con 12% y 0%
+
+-   Calculo de las ventas totales
+
+-   Inclusión de la descripción de las actividades económicas
+
+## ¿Como vamos a trabajar?
+
+![](images/paste-27FE02A1.png)
+
+> ¿Te es familar este diagrama?
+
+## Algunos conceptos de las series de tiempo:
+
+### Tendencia 📈
+
+Una tendencia existe cuando hay un aumento o disminución a largo plazo en los datos. No tiene que ser lineal. A veces nos referiremos a una tendencia como "cambio de dirección", cuando podría pasar de una tendencia creciente a una tendencia decreciente.
+
+## Algunos conceptos de las series de tiempo:
+
+### Tendencia estacional 📅
+
+Un patrón estacional ocurre cuando una serie de tiempo se ve afectada por factores estacionales como la época del año o el día de la semana. La estacionalidad es siempre de un período fijo y conocido. (Junio y diciembre son los meses de repunte en el gráfico mensual)
+
+## Algunos conceptos de las series de tiempo:
+
+### Cíclo ⏲️
+
+Un ciclo ocurre cuando los datos exhiben subidas y bajadas que no tienen una frecuencia fija. Estas fluctuaciones generalmente se deben a las condiciones económicas y, a menudo, están relacionadas con el "ciclo económico". La duración de estas fluctuaciones suele ser de al menos 2 años.
+
+> Para extraer los componentes de una serie de tiempo usamos `components()`
+
+## Autocorrelación 👶🧓
+
+Nos ayuda a identificar patrones estacionales:
+
+![](images/paste-E675B25B.png)
+
+> Para calcular la función de autocorrelación usamos `ACF()`
+
+## Métodos sencillos de estimación 💯
+
+::: columns
+::: {.column width="50%"}
+### Media
+
+![](images/paste-718C18FF.png)
+
+## Naive (el ingenuo)
+
+![](images/paste-B5D71D01.png)
+:::
+
+::: {.column width="50%"}
+### Naive estacional
+
+![](images/paste-3A0F36DC.png)
+
+### Regresión lineal para series de tiempo
+
+![](images/paste-E8CB8092.png)
+:::
+:::
+
+## Agradecimientos ⛑️
+
+-   Primero que a nadie a todos los presentes por haberse unido a este taller
+
+-   A la Cámara de Comercio de Quito por la organización y difusión
+
+-   A quienes hacemos ERGOSTATS por el material
+
+-   Por último y no menos importante, a la comunidad de R que nos provee de estas fantásticas librerias

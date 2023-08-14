@@ -1,0 +1,7 @@
+variable,descripcion
+anio_fiscal,Año fiscal
+mes_fiscal,Mes fiscal
+actividad_economica,Código CIIU a 6 digitos
+descripcion,Descripción de la actividad económica
+ventas_0,Ventas gravadas con el 0% de IVA
+ventas_12,Ventas gravadas con el 12% de IVA

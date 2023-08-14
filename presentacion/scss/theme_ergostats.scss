@@ -1,0 +1,18 @@
+/*-- scss:defaults --*/
+
+
+/*-- scss:rules --*/
+
+body {
+  background-image: url('logo.png');
+  background-repeat: no-repeat;
+  background-position: top left, bottom right;
+  background-size: auto 30%, 20% 20%;
+  }
+  
+html.title body {
+  background:url("logo.png");
+  background-repeat: no-repeat;
+  background-position: top left, bottom right;
+  background-size: 100% auto, 20% 20%;
+}
