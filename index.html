@@ -11,7 +11,7 @@
 
 
 
-<title>Análisis de series de tiempo con R</title>
+<title>Spark con R</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -2754,7 +2754,7 @@ border-radius: 0px;
 
 
 
-<h1 class="title toc-ignore">Análisis de series de tiempo: visualización y pronóstico</h1>
+<h1 class="title toc-ignore">Análisis de grandes volumenes de información (Big Data) con Spark y R</h1>
 <h3 class="subtitle">Instalación y preparación de las herramientas de
 trabajo</h3>
 <h4 class="author">Transferencia de conocimiento del Centro de Investigación Estadística
@@ -2789,12 +2789,13 @@ text-align: center;
 <style> body {text-align: justify} </style>
 <div id="introducción" class="section level2">
 <h2>Introducción</h2>
-<p>Bienvenidos al espacio de transferencia de conocimientos <strong>Análisis de series de tiempo: visualización y pronóstico</strong>. Durante 120 minutos vamos a revisar algunas alternativas para
-  contrastar los resultados de los pronósticos de las ventas gravadas de los contribuyentes del Ecuador. Este taller te será util para 
-  que puedas aprovechar la información de corte temporal en tus activdades profesionales dentro de la Administración Tributaria. 
+<p>Bienvenidos al espacio de transferencia de conocimientos <strong>Análisis de grandes volumenes de información (Big Data) con Spark y R</strong>. Durante 120 minutos vamos a revisar la herramienta Spark para el análisis de grandes volúmenes
+  de información considerando dos alternativas de procesamiento: local y <i>cluster</i>, las cuales nos permitirán optimizar nuestros recursos computacionales al momento realizar nuestros análisis y modelos con este tipo de datos desde el entorno de programación R. 
+  Hoy en día la cantidad de información disponible para el análisis representa un desafio para las instituciones que buscan nutrirse de los hallazgos que se puedan generar en los datos, esta transferencia de conocimientos
+  busca ser una introducción práctica al uso de Spark y R para afrontar este desafio. 
   
   <br>
-A continuación un enlace de recursos que el Centro de Investigación Estadística ERGOSTATS pone a disposición del público:</p>
+A A continuación te dejamos un enlace de recursos que el Centro de Investigación Estadística ERGOSTATS pone a disposición del público:</p>
   
  <p> <a href="https://linktr.ee/ergostats">Recursos y materailes ERGOSTATS</a></p>
   
@@ -2811,35 +2812,26 @@ asistirte con la conexión por medio de RStudio cloud.</p>
 </div>
 <div id="instalación-de-r-base" class="section level2">
 <h2>Instalación de R-Base</h2>
-<p>Iniciamos con la instalación de R básico, esta instalación basta para
-nuestros propósitos. Sin embargo hoy en día tenemos a disposición el
-maravilloso IDE (integrated development environment) de RStudio que nos
-ayuda a que la curva de aprendizaje sea más ligera para los
-estudiantes.</p>
+<p>Iniciamos con la instalación de R básico, esta instalación basta para nuestros propósitos. 
+  Sin embargo hoy en día tenemos a disposición el maravilloso IDE (integrated development environment) 
+  de RStudio que nos ayuda a que la curva de aprendizaje sea más ligera para los estudiantes.</p>
 <p>Para instalar R- Base es necesario saber si nuestro computador es de
 32 o 64 bits. Una vez resuelta esta duda, procederemos a hacer clic en el
 siguiente enlace:</p>
-<p><a href="https://cran.r-project.org/bin/windows/base/R-4.3.0-win.exe">Instalador
+<p><a href="https://cran.r-project.org/bin/windows/base/">Instalador
 de R desde CRAN</a></p>
 <p>Este nos dará la descarga de un archivo <code>.exe</code>. Una vez
 descargado, empezamos la instalación:</p>
 <ul>
-<li>Primero, debemos elegir el lenguaje de preferencia</li>
-<li>Segundo, aceptamos los terminos y condiciones</li>
-<li>Tercero, seleccionamos la ruta en la que se guardará el programa</li>
-<li>Después, seleccionamos qué componentes deben ser instalados (se
-recomienda dejar todas las opciones activas)</li>
-<li>Luego, aceptamos todas estas configuraciones</li>
-<li>A continuación, elegimos el tipo de display (se recomienda la
-establecida por default)</li>
-<li>Enseguida, seleccionamos ayuda HTML para los textos auxiliares</li>
-<li>Posteriormente, definimos una ruta para las librerías. Si se desea
-una carpeta en el menú de inicio, se recomienda dejar las opciones por
-default</li>
-<li>Finalmente, algunas alternativas adicionales como son la creación de
-una acceso rápido y la posibilidad de guardar un registro de varias
-versiones de R (en esta ultima se recomienda mantener un historial por
-motivos de reproducibilidad)</li>
+  <li>Elegimos el lenguaje de preferencia</li>
+  <li>Aceptamos los términos y condiciones</li>
+  <li>Escogimos la ruta en la que se guardará el programa</li>
+  <li>Seleccionamos qué componentes deben ser instalados (se recomienda dejar todas las opciones activas)</li>
+  <li>Aceptamos todas estas configuraciones</li>
+  <li>Elegimos el tipo de display (se recomienda la establecida por default)</li>
+  <li>Seleccionamos ayuda HTML para los textos auxiliares</li>
+  <li>Definimos una ruta para las librerías. Si se desea una carpeta en el menú de inicio, se recomienda dejar las opciones por default</li>
+  <li>Algunas alternativas adicionales como son la creación de una acceso rápido y la posibilidad de guardar un registro de varias versiones de R (en esta ultima se recomienda mantener un historial por motivos de reproducibilidad)</li>
 </ul>
 <p>Con eso, concluye el proceso de instalación, esperamos unos minutos y
 tendremos listo nuestro programa.</p>
@@ -2850,7 +2842,7 @@ tendremos listo nuestro programa.</p>
 en el aprendizaje y eficiencia a la hora de trabajar gracias a la
 centralización de recursos que se describirán a lo largo del curso. Para
 su instalación vamos al siguiente enlace:</p>
-<p><a href="https://download1.rstudio.org/electron/windows/RStudio-2023.06.0-421.exe">Instalador
+<p><a href="https://posit.co/download/rstudio-desktop/">Instalador
 de RStudio</a></p>
 <p>Seguimos la configuración por default para la ruta de instalación,
 salvo que se desee instalar en un directorio específico. Esto no se recomienda debido a que el programa intentará instalar dependencias a
@@ -2859,16 +2851,23 @@ instalación.</p>
 </div>
 <div id="instalación-de-librerias-de-r" class="section level2">
 <h2>Instalación de librerias de R</h2>
-<p>Con estas dos herramientas instaladas, en la consola de RStudio
+  
+<p>Previo a instalar las librerias nos vamos a Rstudio y buscamos el menu <b>Tools > Global options > Packages</b> y retiramos los vistos de las casillas: "Use secure download method for HTTP" y "Use Internet Explorer
+  library/proxy for HTTP", al final la ventana debe verse de la siguiente manera:</p>
+
+  <img src="packages.png" alt="Menu de paquetes en RStudio">
+  
+ <p> Con esto nos aseguramos que podamos realizar la instalacion de las librerias sin inconvenientes.</p>
+<p>Ahora estamos listos para instalar las librerias. En la consola de RStudio
 enviamos la siguiente sentencia:</p>
-<pre class="r"><code>install.packages(c(&quot;tidyverse&quot;,&quot;fable&quot;,&quot;tsibble&quot;,&quot;lubridate&quot;,&quot;feasts&quot;))</code></pre>
+<pre class="r"><code>install.packages(c(&quot;tidyverse&quot;,&quot;sparklyr&quot;,&quot;dbplot&quot;))</code></pre>
 </div>
 <div id="preguntas-y-comentarios" class="section level2">
 <h2>Preguntas y comentarios</h2>
 <p>Si tienes problemas con la instalación puedes escribir un correo
-a:</p>
+al siguiente correo:</p>
 <ul>
-<li><p>Alex Bajaña instructor del taller (<a href="alexvbr@ergostats.org">alexvbr@ergostats.org</a> )</p></li>
+<li><p>Alex Bajaña instructor de la transferencia de conocimeinto (<a href="alexvbr@ergostats.org">alexvbr@ergostats.org</a> )</p></li>
 </ul>
 </div>
 
